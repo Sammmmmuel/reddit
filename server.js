@@ -42,8 +42,8 @@ app.get('/', (req, res) => {
 
 
 require('./controllers/posts.js')(app);
-// Set db
 require('./data/reddit-db');
+require('./controllers/comments.js')(app);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
