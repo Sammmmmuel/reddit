@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Post = require('./models/post');
 const express = require('express')
 const app = express()
@@ -6,10 +7,13 @@ const hbs = require('express-handlebars');
 const path = require('path')
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
+var cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 // Use Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser()); // Add this after you initialize express.
 
 // Add after body parser initialization!
 app.use(expressValidator());
@@ -44,6 +48,7 @@ app.get('/', (req, res) => {
 require('./controllers/posts.js')(app);
 require('./data/reddit-db');
 require('./controllers/comments.js')(app);
+require('./controllers/auth.js')(app);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
