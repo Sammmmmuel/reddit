@@ -7,17 +7,13 @@ const hbs = require('express-handlebars');
 const path = require('path')
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 
-// Use Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser()); // Add this after you initialize express.
-
-// Add after body parser initialization!
+app.use(cookieParser());
 app.use(expressValidator());
-
 app.engine('hbs', hbs({
     layoutsDir: __dirname + '/views/layouts',
     defaultLayout: 'index',
@@ -26,24 +22,38 @@ app.engine('hbs', hbs({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// app.get('/', (req, res) => {
-//     res.render('main', { layout: 'index' });
-// });
 
+const checkAuth = (req, res, next) => {
+    if (
+        typeof req.cookies.nToken === "undefined" ||
+        req.cookies.nToken === null
+    ) {
+        req.user = null
+    } else {
+        const token = req.cookies.nToken
+        const decodedToken = jwt.decode(token, { complete: true }) || {}
+        req.user = decodedToken.payload
+    }
+    res.locals.currentUser = req.user
+
+    next();
+};
+
+app.use(checkAuth);
 app.get("/posts/new", (req, res) => {
     res.render("posts-new.hbs")
 })
 
 app.get('/', (req, res) => {
+    const currentUser = req.user;
     Post.find({}).lean()
         .then(posts => {
-            res.render('posts-index', { posts });
+            res.render('posts-index', { posts, currentUser });
         })
         .catch(err => {
             console.log(err.message);
         })
 })
-
 
 require('./controllers/posts.js')(app);
 require('./data/reddit-db');
