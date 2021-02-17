@@ -7,7 +7,10 @@ const UserSchema = new Schema({
     updatedAt: { type: Date },
     password: { type: String, select: false },
     username: { type: String, required: true }
-}, { timestamps: { createdAt: 'created_at' } });
+}, {
+    timestamps: { createdAt: 'created_at' },
+    posts: [{ type: Schema.Types.ObjectId, ref: "Post" }]
+});
 
 // Must use function here! ES6 => functions do not bind this!
 UserSchema.pre("save", function(next) {

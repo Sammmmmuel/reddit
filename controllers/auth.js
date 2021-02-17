@@ -28,7 +28,7 @@ module.exports = app => {
     });
     // LOGIN FORM
     app.get('/login', (req, res) => {
-        res.render('login.hbs');
+        res.render('login');
     });
     // LOGIN
     app.post("/login", (req, res) => {

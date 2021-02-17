@@ -41,20 +41,22 @@ const checkAuth = (req, res, next) => {
 
 app.use(checkAuth);
 app.get("/posts/new", (req, res) => {
-    res.render("posts-new.hbs")
+    res.render("posts-new")
 })
 
+// INDEX
 app.get('/', (req, res) => {
-    const currentUser = req.user;
-    Post.find({}).lean()
+    var currentUser = req.user;
+    // res.render('home', {});
+    console.log(req.cookies);
+    Post.find({}).lean().populate('author')
         .then(posts => {
             res.render('posts-index', { posts, currentUser });
-        })
-        .catch(err => {
+            // res.render('home', {});
+        }).catch(err => {
             console.log(err.message);
         })
 })
-
 require('./controllers/posts.js')(app);
 require('./data/reddit-db');
 require('./controllers/comments.js')(app);
