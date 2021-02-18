@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 assert = require("assert");
 
-const url = "mongodb://localhost/reddit-db";
+const url = "mongodb://localhost/reddit-dbv2";
 mongoose.Promise = global.Promise;
 mongoose.connect(
     url, {
@@ -20,5 +20,4 @@ mongoose.connect(
 );
 mongoose.connection.on("error", console.error.bind(console, "MongoDB connection Error:"));
 mongoose.set("debug", true);
-
 module.exports = mongoose.connection;

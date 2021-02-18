@@ -40,9 +40,9 @@ const checkAuth = (req, res, next) => {
 };
 
 app.use(checkAuth);
-app.get("/posts/new", (req, res) => {
-    res.render("posts-new")
-})
+// app.get("/posts/new", (req, res) => {
+//     res.render("posts-new")
+// })
 
 // INDEX
 app.get('/', (req, res) => {
@@ -61,6 +61,8 @@ require('./controllers/posts.js')(app);
 require('./data/reddit-db');
 require('./controllers/comments.js')(app);
 require('./controllers/auth.js')(app);
+require('./controllers/replies.js')(app);
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
