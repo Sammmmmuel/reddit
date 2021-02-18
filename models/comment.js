@@ -7,6 +7,13 @@ const CommentSchema = new Schema({
 }, {
     timestamps: { createdAt: 'created_at' },
 
-    author: { type: Schema.Types.ObjectId, ref: "User", required: true }
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
 });
+CommentSchema
+    .pre('findOne', Populate('author'))
+    .pre('find', Populate('author'))
+    .pre('findOne', Populate('comments'))
+    .pre('find', Populate('comments'))
+
 module.exports = mongoose.model("Comment", CommentSchema);
