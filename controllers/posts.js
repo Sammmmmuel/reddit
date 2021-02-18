@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Post = require('../models/post');
 
+
 module.exports = (app) => {
     app.get("/posts/new", (req, res) => {
         res.render("posts-new")
@@ -9,8 +10,10 @@ module.exports = (app) => {
     app.post('/posts/new', (req, res) => {
         const currentUser = req.user;
         if (req.user) {
-            var post = new Post(req.body);
+            const user = req.user
+            const post = new Post(req.body);
             post.author = req.user._id;
+            // post.author = user._id
             post
                 .save()
                 .then(post => {
@@ -19,9 +22,7 @@ module.exports = (app) => {
                 .then(user => {
                     user.posts.unshift(post);
                     user.save();
-                    // REDIRECT TO THE NEW POST
-                    // res.redirect(`/posts/${post._id}`);
-                    return res.redirect(`/`);
+                    res.redirect('/posts/');
                 })
                 .catch(err => {
                     console.log(err.message);
@@ -33,9 +34,10 @@ module.exports = (app) => {
     });
 
 
+    // SHOW
     app.get("/posts/:id", function(req, res) {
         const currentUser = req.user;
-        Post.findById(req.params.id).lean().populate('comments').populate('author')
+        Post.findById(req.params.id).lean().populate({ path: 'comments', populate: { path: 'author' } }).populate('author')
             .then(post => {
                 res.render("posts-show", { post, currentUser });
             })
