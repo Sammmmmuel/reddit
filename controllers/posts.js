@@ -32,7 +32,7 @@ module.exports = (app) => {
                     return User.findById(req.user._id);
                 })
                 .then(user => {
-                    user.posts.unshift(post);
+                    // user.posts.unshift(post);
                     user.save();
                     res.redirect('/posts/');
                 })

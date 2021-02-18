@@ -1,4 +1,3 @@
-require('dotenv').config();
 const Post = require('./models/post');
 const express = require('express')
 const app = express()
@@ -9,6 +8,7 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,6 +16,7 @@ app.use(cookieParser());
 app.use(expressValidator());
 app.engine('hbs', hbs({
     layoutsDir: __dirname + '/views/layouts',
+    // partialsDir: path.join(__dirname, 'views/partials'),
     defaultLayout: 'index',
     extname: 'hbs'
 }));
@@ -40,23 +41,7 @@ const checkAuth = (req, res, next) => {
 };
 
 app.use(checkAuth);
-// app.get("/posts/new", (req, res) => {
-//     res.render("posts-new")
-// })
 
-// INDEX
-app.get('/', (req, res) => {
-    var currentUser = req.user;
-    // res.render('home', {});
-    console.log(req.cookies);
-    Post.find({}).lean().populate('author')
-        .then(posts => {
-            res.render('posts-index', { posts, currentUser });
-            // res.render('home', {});
-        }).catch(err => {
-            console.log(err.message);
-        })
-})
 require('./controllers/posts.js')(app);
 require('./data/reddit-db');
 require('./controllers/comments.js')(app);

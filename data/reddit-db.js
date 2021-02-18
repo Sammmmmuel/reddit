@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 assert = require("assert");
 
-const url = "mongodb://localhost/reddit-dbv2";
+const url = "mongodb://localhost/reddit-dbv3";
 mongoose.Promise = global.Promise;
 mongoose.connect(
     url, {

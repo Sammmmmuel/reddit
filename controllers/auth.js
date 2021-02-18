@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const User = require("../models/user");
-const Populate = require("../util/autopopulate");
 
 module.exports = app => {
     // SIGN UP POST

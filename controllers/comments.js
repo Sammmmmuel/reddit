@@ -2,7 +2,7 @@ const Post = require('../models/post');
 const Comment = require('../models/comment');
 
 module.exports = (app) => {
-    app.post("/posts/:postId/comments", (req, res) => {
+    app.post("/posts/:postId/comments", function(req, res) {
         const comment = new Comment(req.body)
         comment.author = req.user._id
         comment
