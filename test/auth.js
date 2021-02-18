@@ -10,25 +10,29 @@ const agent = chai.request.agent(server);
 const User = require("../models/user");
 
 describe("User", function() {
-    it("should not be able to login if they have not registered", function(done) {
-        agent.post("/login", { email: "wrong@wrong.com", password: "nope" }).end(function(err, res) {
-            res.status.should.be.equal(401);
-            done();
-        });
-    });
-});
-
-// signup
-it("should be able to signup", function(done) {
-    User.findOneAndRemove({ username: "testone" }, function() {
+    it("should not be able to sign in if they are not registered", function(done) {
         agent
-            .post("/sign-up")
-            .send({ username: "testone", password: "password" })
+            .post("/login", { email: "no@no.com", password: "nono" })
             .end(function(err, res) {
-                console.log(res.body);
-                res.should.have.status(200);
-                agent.should.have.cookie("nToken");
-                done();
-            });
-    });
-});
+                res.status.should.be.equal(401)
+                done()
+            })
+    })
+
+    it("should be able to signup", function(done) {
+        User.findOneAndRemove("test@test.com", function() {
+            agent
+                .post("/sign-up")
+                .send({ email: "test@test.com", password: "1234" })
+                .end(function(err, res) {
+                    res.status.should.be.equal(200)
+                    agent.should.have.cookie("nToken")
+                    done()
+                })
+        })
+    })
+
+    after(function() {
+        agent.close()
+    })
+})
